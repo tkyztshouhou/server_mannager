@@ -1,0 +1,204 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <title>旅服后台操作</title>  
+    <!-- 引入JavaScript文件 -->  
+    <script src="{{ url_for('static', filename='jquery-3.6.0.min.js') }}"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">  
+</head>  
+<body>  
+    <h1>旅服系统后台操作界面</h1>  
+    <form id="command-form">  
+        <label for="server-ip">服务器 IP:</label>  
+        <input type="text" id="server-ip" name="server-ip" value="127.0.0.1" disabled>  
+        <br>  
+        <label for="server-port">服务器 端口:</label>  
+        <input type="number" id="server-port" name="server-port" value="8080" disabled>  
+        <br>  
+        <!-- <input type="text" id="bat-command" name="bat-command"> -->
+        <br>
+        <label for="select-service">选择后台:</label> 
+        <select name="command-list" id="command-lis">
+            <option value="WSearch">到发后台</option>
+            <option value="dir">广播后台</option>
+            <option value="ls">导向后台</option>
+            <option value="pas">闸机AFC后台</option>
+            <option value="pas">生成计划后台</option>
+            <option value="pas">TDMS后台</option>
+            <option value="pas">SyncInterface后台</option>
+        </select>
+        <label for="bat-command">操作:</label>  
+        
+        <button type="button" id="start-command">启动</button>
+        <br><br>   
+        <button type="button" id="stop-command">停止</button> 
+        <br><br>   
+        <button type="button" id="restart-command">重启</button>
+        <br><br>   
+        <button type="button" id="test-command">检查服务状态</button>      
+    </form>  
+  
+    <h2>操作日志:</h2>  
+    <pre id="command-output"></pre>  
+    <!-- start -->
+    <script>
+        $('#start-command').on('click',function(){
+            // 获取select元素  
+            var selectElement = document.getElementById('command-lis');
+            // 获取当前选中的option的value  
+            var selectedValue = selectElement.value;
+            console.log(selectedValue)   
+            if(selectedValue){
+                var command = {
+                    "command": 'net start ' + selectedValue
+                };
+                $.ajax({
+                    url:'/execute_command',
+                    type: 'POST',
+                    data: JSON.stringify(command),
+                    contentType: "application/json",
+                    success: function(response) {
+                        var outputElement = $('#command-output');  
+                        var newOutput = response + '\n'; // 添加换行符以区分不同命令的输出  
+                        outputElement.prepend(newOutput); // 从首行插入新的输出  
+                        alert('Command sent successfully.'); 
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }else{
+                alert('Please enter a command.');
+            }
+        })  
+    </script>
+    <!-- stop -->
+    <script>
+        $('#stop-command').on('click',function(){
+            // 获取select元素  
+            var selectElement = document.getElementById('command-lis');
+            // 获取当前选中的option的value  
+            var selectedValue = selectElement.value;
+            console.log(selectedValue)   
+            if(selectedValue){
+                var command = {
+                    "command": 'net stop ' + selectedValue
+                };
+                $.ajax({
+                    url:'/execute_command',
+                    type: 'POST',
+                    data: JSON.stringify(command),
+                    contentType: "application/json",
+                    success: function(response) {
+                        var outputElement = $('#command-output');  
+                        var newOutput = response + '\n'; // 添加换行符以区分不同命令的输出  
+                        outputElement.prepend(newOutput); // 从首行插入新的输出  
+                        alert('Command sent successfully.'); 
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }else{
+                alert('Please enter a command.');
+            }
+        })  
+    </script>
+    <!-- restart -->
+    <script>
+        $('#restart-command').on('click',function(){
+            // 获取select元素  
+            var selectElement = document.getElementById('command-lis');
+            // 获取当前选中的option的value  
+            var selectedValue = selectElement.value;
+            console.log(selectedValue)   
+            if(selectedValue){
+                var command = {
+                    "command": 'net restart ' + selectedValue
+                };
+                $.ajax({
+                    url:'/execute_command',
+                    type: 'POST',
+                    data: JSON.stringify(command),
+                    contentType: "application/json",
+                    success: function(response) {
+                        var outputElement = $('#command-output');  
+                        var newOutput = response + '\n'; // 添加换行符以区分不同命令的输出  
+                        outputElement.prepend(newOutput); // 从首行插入新的输出  
+                        alert('Command sent successfully.'); 
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }else{
+                alert('Please enter a command.');
+            }
+        })  
+    </script> 
+    <!-- 测试 -->
+    <script>
+        $('#test-command2').on('click',function(){
+            // 获取select元素  
+            var selectElement = document.getElementById('command-lis');
+            // 获取当前选中的option的value  
+            var selectedValue = selectElement.value;
+            console.log(selectedValue)   
+            if(selectedValue){
+                var command = {
+                    "command": 'sc query ' + selectedValue
+                };
+                $.ajax({
+                    url:'/execute_command',
+                    type: 'POST',
+                    data: JSON.stringify(command),
+                    contentType: "application/json",
+                    success: function(response) {
+                        var outputElement = $('#command-output');  
+                        var newOutput = response + '\n'; // 添加换行符以区分不同命令的输出  
+                        outputElement.prepend(newOutput); // 从首行插入新的输出  
+                        alert('Command sent successfully.'); 
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }else{
+                alert('Please enter a command.');
+            }
+        })  
+    </script>
+    <!-- 检查 -->
+    <script>
+        // 获取select元素 
+        var selectElement = document.getElementById('command-lis');
+        // 获取当前选中的option的value  
+        var selectedValue = selectElement.value;
+        $(document).ready(function() {
+          $("#test-command").click(function() {
+            var command = {
+              "service_name": selectedValue
+            };
+            console.log(selectedValue)
+            $.ajax({
+              url: "/check",
+              type: "POST",
+              data: JSON.stringify(command),
+              contentType: "application/json",
+              success: function(response) {
+                var outputElement = $('#command-output');  
+                var newOutput = response + '\n'; // 添加换行符以区分不同命令的输出  
+                outputElement.prepend(newOutput); // 从首行插入新的输出  
+                alert('Command sent successfully.'); 
+              },
+              error: function(error) {
+                console.log(error);
+              }
+            });
+          });
+        });
+      </script>
+</body>  
+</html>
